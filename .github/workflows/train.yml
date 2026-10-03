@@ -1,0 +1,45 @@
+name: Train and Version Model
+
+# When this workflow runs.
+on:
+  push:
+    branches: [ main ]        # Run on every push to the main branch.
+  schedule:
+    - cron: "0 0 * * *"       # Also run every day at midnight UTC.
+  workflow_dispatch:           # And allow running it manually from the Actions tab.
+
+jobs:
+  train:
+    runs-on: ubuntu-latest     # Use a fresh Ubuntu machine provided by GitHub.
+
+    steps:
+      # 1. Get your repository code onto the runner.
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      # 2. Install Python on the runner.
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # 3. Install the packages the scripts need.
+      - name: Install dependencies
+        run: pip install pandas scikit-learn joblib
+
+      # 4. Run the training script to produce a new versioned model.
+      - name: Train the model
+        run: python train_model.py
+
+      # 5. Run the evaluation script to produce a new versioned metrics file.
+      - name: Evaluate the model
+        run: python evaluate_model.py
+
+      # 6. Commit the new model and metrics back into the repository.
+      - name: Commit model and metrics
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add models/ metrics/ data/X_test.csv data/y_test.csv
+          git commit -m "Automated training run: new model and metrics" || echo "No changes to commit"
+          git push
