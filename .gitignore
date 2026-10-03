@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated intermediate data files (not needed in version control)
+data/X_test.csv
+data/y_test.csv
