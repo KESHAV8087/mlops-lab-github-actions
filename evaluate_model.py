@@ -6,6 +6,8 @@ import pandas as pd
 import joblib
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
+os.makedirs("metrics", exist_ok=True)
+
 # 1. Read the pointer file to find out which model is the latest.
 with open("models/latest_model.json", "r") as f:
     latest = json.load(f)

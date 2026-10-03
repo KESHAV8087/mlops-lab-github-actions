@@ -7,6 +7,10 @@ import joblib
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 
+# Make sure the output folders exist on any machine, including a fresh runner.
+os.makedirs("models", exist_ok=True)
+os.makedirs("data", exist_ok=True)
+
 # 1. Load the real weather data we fetched and committed earlier.
 df = pd.read_csv("data/weather.csv")
 
